@@ -37,51 +37,36 @@ func run(fn string) {
 		dieIf(errors.New("failed on first line"))
 	}
 
-	fields := lineToInt64Slice(s.Text())
+	fields := lineToIntSlice(s.Text())
 	totSlices := fields[0]
-	nTypes := fields[1]
 
 	if !s.Scan() {
 		dieIf(errors.New("failed on second line"))
 	}
 
-	pizzas := lineToInt64Slice(s.Text())
+	pizzas := lineToIntSlice(s.Text())
+	var order []string
 
-	// check data
-	if int64(len(pizzas)) != nTypes {
-		dieIf(errors.Errorf("expected %v types of pizzas, got %v", nTypes, len(pizzas)))
-	}
-
-	var sum, total, id int64
-	for i, n := range pizzas {
-		sum += n
-		if sum > totSlices {
-			break
+	var sum int
+	for i := len(pizzas) - 1; i >= 0; i-- {
+		if sum+pizzas[i] > totSlices {
+			continue
 		}
-		id = int64(i)
-		total = sum
-	}
-	if sum < totSlices {
-		dieIf(errors.Errorf("not enough slices in the pizza types: %v < %v", sum, totSlices))
+		sum += pizzas[i]
+		order = append(order, strconv.Itoa(i))
 	}
 
-	fmt.Println(id, total)
+	fmt.Printf("points: %v, max: %v, difference: %v\n", sum, totSlices, totSlices-sum)
 
 	out, err := os.Create(fn + ".out")
 	dieIf(err)
 	defer out.Close()
 
-	_, err = out.WriteString(strconv.Itoa(int(id+1)) + "\n")
+	_, err = out.WriteString(strconv.Itoa(len(order)) + "\n")
 	dieIf(err)
 
-	ids := make([]string, 0, id+1)
-	for i := 0; i < int(id+1); i++ {
-		ids = append(ids, strconv.Itoa(i))
-	}
-
-	_, err = out.WriteString(strings.Join(ids, " ") + "\n")
+	_, err = out.WriteString(strings.Join(order, " ") + "\n")
 	dieIf(err)
-
 }
 
 func dieIf(err error) {
@@ -98,6 +83,17 @@ func lineToInt64Slice(line string) []int64 {
 		dieIf(err)
 
 		out = append(out, num)
+	}
+	return out
+}
+func lineToIntSlice(line string) []int {
+	fields := strings.Fields(line)
+	out := make([]int, 0, len(fields))
+	for _, field := range fields {
+		num, err := strconv.ParseInt(field, 10, 64)
+		dieIf(err)
+
+		out = append(out, int(num))
 	}
 	return out
 }
