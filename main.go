@@ -7,12 +7,14 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/pkg/errors"
 )
 
 func main() {
-
+	t0 := time.Now()
 	files := []string{
 		"a_example",
 		"b_small",
@@ -21,12 +23,51 @@ func main() {
 		"e_also_big",
 	}
 
+	wgRunners := sync.WaitGroup{}
+	wgPrinter := sync.WaitGroup{}
+	out := make(chan output, 5)
+
+	wgPrinter.Add(1)
+	go func() {
+		defer wgPrinter.Done()
+
+		var sumP, sumT int
+		for res := range out {
+			sumP += res.p
+			sumT += res.max
+			fmt.Printf("file: %v, points: %v, max: %v, difference: %v\n", res.fn, res.p, res.max, res.max-res.p)
+		}
+
+		fmt.Printf("total, points: %v, max: %v, difference: %v, perc. missing: %f%%: \n",
+			sumP, sumT, sumT-sumP, 100*float64(sumT-sumP)/float64(sumT))
+	}()
+
 	for _, fn := range files {
-		run(fn)
+		wgRunners.Add(1)
+
+		go func(wg *sync.WaitGroup, fn string, out chan output) {
+			defer wg.Done()
+
+			out <- run(fn)
+		}(&wgRunners, fn, out)
 	}
+
+	wgRunners.Wait()
+	close(out)
+
+	wgPrinter.Wait()
+
+	fmt.Println()
+	log.Println("done in ", time.Since(t0))
 }
 
-func run(fn string) {
+type output struct {
+	p   int
+	max int
+	fn  string
+}
+
+func run(fn string) output {
 	// read data
 	in, err := os.Open(fn + ".in")
 	dieIf(err)
@@ -56,8 +97,6 @@ func run(fn string) {
 		order = append(order, strconv.Itoa(i))
 	}
 
-	fmt.Printf("points: %v, max: %v, difference: %v\n", sum, totSlices, totSlices-sum)
-
 	out, err := os.Create(fn + ".out")
 	dieIf(err)
 	defer out.Close()
@@ -67,6 +106,12 @@ func run(fn string) {
 
 	_, err = out.WriteString(strings.Join(order, " ") + "\n")
 	dieIf(err)
+
+	return output{
+		p:   sum,
+		max: totSlices,
+		fn:  fn,
+	}
 }
 
 func dieIf(err error) {
@@ -75,17 +120,6 @@ func dieIf(err error) {
 	}
 }
 
-func lineToInt64Slice(line string) []int64 {
-	fields := strings.Fields(line)
-	out := make([]int64, 0, len(fields))
-	for _, field := range fields {
-		num, err := strconv.ParseInt(field, 10, 64)
-		dieIf(err)
-
-		out = append(out, num)
-	}
-	return out
-}
 func lineToIntSlice(line string) []int {
 	fields := strings.Fields(line)
 	out := make([]int, 0, len(fields))
