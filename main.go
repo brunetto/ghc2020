@@ -27,6 +27,7 @@ func main() {
 	wgPrinter := sync.WaitGroup{}
 	out := make(chan output, 5)
 
+	// print result as they arrive, concurrent safe
 	wgPrinter.Add(1)
 	go func() {
 		defer wgPrinter.Done()
@@ -42,6 +43,7 @@ func main() {
 			sumP, sumT, sumT-sumP, 100*float64(sumT-sumP)/float64(sumT))
 	}()
 
+	// run tasks
 	for _, fn := range files {
 		wgRunners.Add(1)
 
@@ -88,6 +90,7 @@ func run(fn string) output {
 	pizzas := lineToIntSlice(s.Text())
 	var order []string
 
+	// input are sorted, in case they aren't, it's easy to sort them... maybe...
 	var sum int
 	for i := len(pizzas) - 1; i >= 0; i-- {
 		if sum+pizzas[i] > totSlices {
