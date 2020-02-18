@@ -13,19 +13,71 @@ import (
 	"github.com/pkg/errors"
 )
 
+var files = []string{
+	"a_example",
+	"b_small",
+	"c_medium",
+	"d_quite_big",
+	"e_also_big",
+}
+
+func run(fn string) output {
+	// read data
+	in, err := os.Open(fn + ".in")
+	dieIf(err)
+
+	s := bufio.NewScanner(in)
+
+	if !s.Scan() {
+		dieIf(errors.New("failed on first line"))
+	}
+
+	_ = lineToIntSlice(s.Text())
+
+	/*
+
+	   action here
+
+
+
+
+
+
+
+
+
+
+
+
+
+	*/
+
+	// write output
+	out, err := os.Create(fn + ".out")
+	dieIf(err)
+	defer out.Close()
+
+	_, err = out.WriteString("asdasdasd" + "\n")
+	dieIf(err)
+
+	_, err = out.WriteString("asdasdasd" + "\n")
+	dieIf(err)
+
+	return output{
+		p:   0,
+		max: 0,
+		fn:  fn,
+	}
+}
+
+// =============================================================
+
 func main() {
 	t0 := time.Now()
-	files := []string{
-		"a_example",
-		"b_small",
-		"c_medium",
-		"d_quite_big",
-		"e_also_big",
-	}
 
 	wgRunners := sync.WaitGroup{}
 	wgPrinter := sync.WaitGroup{}
-	out := make(chan output, 5)
+	out := make(chan output, len(files))
 
 	// print result as they arrive, concurrent safe
 	wgPrinter.Add(1)
@@ -69,60 +121,6 @@ type output struct {
 	fn  string
 }
 
-func run(fn string) output {
-	// read data
-	in, err := os.Open(fn + ".in")
-	dieIf(err)
-
-	s := bufio.NewScanner(in)
-
-	if !s.Scan() {
-		dieIf(errors.New("failed on first line"))
-	}
-
-	fields := lineToIntSlice(s.Text())
-	totSlices := fields[0]
-
-	if !s.Scan() {
-		dieIf(errors.New("failed on second line"))
-	}
-
-	pizzas := lineToIntSlice(s.Text())
-	var order []string
-
-	// input are sorted, in case they aren't, it's easy to sort them... maybe...
-	var sum int
-	for i := len(pizzas) - 1; i >= 0; i-- {
-		if sum+pizzas[i] > totSlices {
-			continue
-		}
-		sum += pizzas[i]
-		order = append(order, strconv.Itoa(i))
-	}
-
-	out, err := os.Create(fn + ".out")
-	dieIf(err)
-	defer out.Close()
-
-	_, err = out.WriteString(strconv.Itoa(len(order)) + "\n")
-	dieIf(err)
-
-	_, err = out.WriteString(strings.Join(order, " ") + "\n")
-	dieIf(err)
-
-	return output{
-		p:   sum,
-		max: totSlices,
-		fn:  fn,
-	}
-}
-
-func dieIf(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func lineToIntSlice(line string) []int {
 	fields := strings.Fields(line)
 	out := make([]int, 0, len(fields))
@@ -133,4 +131,10 @@ func lineToIntSlice(line string) []int {
 		out = append(out, int(num))
 	}
 	return out
+}
+
+func dieIf(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }
