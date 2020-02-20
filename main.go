@@ -117,8 +117,21 @@ func run(fn string) output {
 	// ordino le librerie per potenziale
 	sort.Sort(libraries)
 
-	// rimuovo i duplicati dopo aver calcolato il potenziale
+	libraries2 := make(Libraries, 1, len(libraries))
+	libraries2[0] = libraries[0]
 	for i, l := range libraries {
+		if i == 0 {
+			continue
+		}
+		l.Score = (totDays - libraries2[i-1].RegistrationTime - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
+		libraries2 = append(libraries2, l)
+	}
+
+	// ordino le librerie per il nuovo potenziale
+	sort.Sort(libraries2)
+
+	// rimuovo i duplicati dopo aver calcolato il potenziale
+	for i, l := range libraries2 {
 		var bks Books
 		for _, b := range l.Books {
 			if books[b.ID].Taken {
@@ -131,11 +144,11 @@ func run(fn string) output {
 		l.Books = bks
 		l.BooksCount = len(l.Books)
 
-		libraries[i] = l
+		libraries2[i] = l
 	}
 
 	res := []Result{}
-	for _, l := range libraries {
+	for _, l := range libraries2 {
 		if l.BooksCount == 0 {
 			continue
 		}
