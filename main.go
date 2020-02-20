@@ -14,63 +14,137 @@ import (
 )
 
 var files = []string{
-	"a_example",
-	"b_small",
-	"c_medium",
-	"d_quite_big",
-	"e_also_big",
+	"a_example.txt",
+	"b_read_on.txt",
+	"c_incunabula.txt",
+	"d_tough_choices.txt",
+	"e_so_many_books.txt",
+	"f_libraries_of_the_world.txt",
 }
 
 func run(fn string) output {
 	// read data
-	in, err := os.Open(fn + ".in")
+	in, err := os.Open(fn)
 	dieIf(err)
+	defer in.Close()
 
 	s := bufio.NewScanner(in)
+	bf := []byte{}
+	s.Buffer(bf, 5e6)
 
 	if !s.Scan() {
 		dieIf(errors.New("failed on first line"))
 	}
+	tmp := lineToIntSlice(s.Text())
 
-	_ = lineToIntSlice(s.Text())
+	nBooks := tmp[0]
+	nLibraries := tmp[1]
+	// totDays := tmp[2]
 
-	/*
+	if !s.Scan() {
+		dieIf(errors.New("failed on second line"))
+	}
+	tmp = lineToIntSlice(s.Text())
 
-	   action here
+	// read books
+	books := make([]Book, 0, nBooks)
+	for id, score := range tmp {
+		books = append(books, Book{
+			ID: id, Score: score,
+		})
+	}
 
+	var theoreticalMaxScore int
+	for _, b := range books {
+		theoreticalMaxScore += b.Score
+	}
 
+	// read libraries
+	libraries := make([]Library, 0, nLibraries)
+	for i := 0; i < nLibraries; i++ {
+		if !s.Scan() {
+			dieIf(errors.New("failed on first line"))
+		}
+		tmp = lineToIntSlice(s.Text())
 
+		l := Library{
+			ID:               i,
+			BooksCount:       tmp[0],
+			RedistrationTime: tmp[1],
+			BooksPerDay:      tmp[2],
+		}
+		if !s.Scan() {
+			dieIf(errors.New("failed on first line"))
+		}
+		l.BookIDs = lineToIntSlice(s.Text())
+		libraries = append(libraries, l)
+	}
 
-
-
-
-
-
-
-
-
-
-	*/
+	res := []Result{}
+	for _, l := range libraries {
+		res = append(res, Result{
+			LibraryID:  l.ID,
+			BooksCount: l.BooksCount,
+			BookIDs:    l.BookIDs,
+		})
+	}
 
 	// write output
 	out, err := os.Create(fn + ".out")
 	dieIf(err)
 	defer out.Close()
 
-	_, err = out.WriteString("asdasdasd" + "\n")
+	_, err = out.WriteString(fmt.Sprintf("%v", len(res)) + "\n")
 	dieIf(err)
 
-	_, err = out.WriteString("asdasdasd" + "\n")
-	dieIf(err)
+	score := map[int]int{}
+	for _, r := range res {
+		_, err = out.WriteString(fmt.Sprintf("%v %v", r.LibraryID, r.BooksCount) + "\n")
+		dieIf(err)
+
+		bks := make([]string, 0, len(r.BookIDs))
+		for _, bid := range r.BookIDs {
+			score[bid] = books[bid].Score
+			bks = append(bks, strconv.Itoa(bid))
+		}
+		_, err = out.WriteString(strings.Join(bks, " ") + "\n")
+		dieIf(err)
+	}
+
+	var totalScore int
+	for _, s := range score {
+		totalScore += s
+	}
 
 	return output{
-		p:   0,
-		max: 0,
+		p:   totalScore,
+		max: theoreticalMaxScore,
 		fn:  fn,
 	}
+
 }
 
 // =============================================================
+
+type Book struct {
+	ID    int
+	Score int
+	Done  bool
+}
+
+type Library struct {
+	ID               int
+	BooksCount       int
+	BookIDs          []int
+	RedistrationTime int
+	BooksPerDay      int
+}
+
+type Result struct {
+	LibraryID  int
+	BooksCount int
+	BookIDs    []int
+}
 
 func main() {
 	t0 := time.Now()

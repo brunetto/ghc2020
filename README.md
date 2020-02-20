@@ -2,37 +2,14 @@
 
 ## v0 
 
-points: 13, max: 17, difference: 1    
-points: 99, max: 100, difference: 1    
-points: 4329, max: 4500, difference: 171    
-points: 999854624, max: 1000000000, difference: 145376    
-points: 504959667, max: 505000000, difference: 40333    
-total: 1504818713     
+➜  ghc2020 git:(v0) ✗ go run main.go
+file: a_example.txt, points: 21, max: 21, difference: 0
+file: b_read_on.txt, points: 10000000, max: 10000000, difference: 0
+file: f_libraries_of_the_world.txt, points: 39885586, max: 40111142, difference: 225556
+file: e_so_many_books.txt, points: 12457261, max: 12548648, difference: 91387
+file: c_incunabula.txt, points: 23372244, max: 30076415, difference: 6704171
+file: d_tough_choices.txt, points: 5109000, max: 5109000, difference: 0
+total, points: 90824112, max: 97845226, difference: 7021114, perc. missing: 7.175735%: 
 
-# v1
+2020/02/20 19:47:38 done in  707.653502ms
 
-Start from the end, add everything you can fit in
-
-```
-points: 16, max: 17, difference: 1
-points: 80, max: 100, difference: 1
-points: 4495, max: 4500, difference: 5
-points: 999999725, max: 1000000000, difference: 275
-points: 504999983, max: 505000000, difference: 17
-total: 1505004318
-```
-
-# v1 a
-
-Parallel and nicer output
-
-```
-file: a_example, points: 16, max: 17, difference: 1
-file: b_small, points: 99, max: 100, difference: 1
-file: c_medium, points: 4495, max: 4500, difference: 5
-file: d_quite_big, points: 999999725, max: 1000000000, difference: 275
-file: e_also_big, points: 504999983, max: 505000000, difference: 17
-total, points: 1505004318, max: 1505004617, difference: 299, perc. missing: 0.000020%: 
-```
-
-2020/02/18 15:45:03 done in  2.232735ms
