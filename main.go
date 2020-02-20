@@ -123,7 +123,9 @@ func run(fn string) output {
 		if i == 0 {
 			continue
 		}
-		l.Score = (totDays - libraries2[i-1].RegistrationTime - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
+		l.Start = libraries2[i-1].Start + l.RegistrationTime
+		workingDays := totDays - l.Start
+		l.Score = (totDays - l.Start) * l.BooksPerDay * workingDays //* l.TotalBooksValue
 		libraries2 = append(libraries2, l)
 	}
 
@@ -133,7 +135,10 @@ func run(fn string) output {
 	// rimuovo i duplicati dopo aver calcolato il potenziale
 	for i, l := range libraries2 {
 		var bks Books
-		for _, b := range l.Books {
+		for j, b := range l.Books {
+			if j+l.Start > totDays {
+				break
+			}
 			if books[b.ID].Taken {
 				continue
 			}
@@ -222,6 +227,7 @@ type Library struct {
 	BooksPerDay      int
 	Score            int
 	TotalBooksValue  int
+	Start            int
 }
 
 func (l Libraries) Len() int           { return len(l) }
