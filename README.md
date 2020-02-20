@@ -17,3 +17,8 @@ total, points: 90824112, max: 97845226, difference: 7021114, perc. missing: 7.17
 
 reverse sort on books values for each libraries
 
+## v2
+
+valore libreria == totale valore libri
+
+

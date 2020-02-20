@@ -61,7 +61,7 @@ func run(fn string) output {
 	}
 
 	// read libraries
-	libraries := make([]Library, 0, nLibraries)
+	libraries := make(Libraries, 0, nLibraries)
 	for i := 0; i < nLibraries; i++ {
 		if !s.Scan() {
 			dieIf(errors.New("failed on first line"))
@@ -85,8 +85,18 @@ func run(fn string) output {
 		}
 		sort.Sort(bks)
 		l.Books = bks
+
+		// score della library = somma degli score dei libri
+		var score int
+		for _, b := range l.Books {
+			score += b.Score
+		}
+		l.Score = score
+
 		libraries = append(libraries, l)
 	}
+
+	sort.Sort(libraries)
 
 	res := []Result{}
 	for _, l := range libraries {
@@ -151,6 +161,7 @@ func (a Books) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
 // books reverse sort
 func (a Books) Less(i, j int) bool { return a[i].Score > a[j].Score }
 
+type Libraries []Library
 type Library struct {
 	ID               int
 	BooksCount       int
@@ -158,7 +169,12 @@ type Library struct {
 	Books            Books
 	RedistrationTime int
 	BooksPerDay      int
+	Score            int
 }
+
+func (l Libraries) Len() int           { return len(l) }
+func (l Libraries) Swap(i, j int)      { l[i], l[j] = l[j], l[i] }
+func (l Libraries) Less(i, j int) bool { return l[i].Score > l[j].Score }
 
 type Result struct {
 	LibraryID  int
