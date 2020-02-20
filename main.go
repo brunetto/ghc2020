@@ -40,7 +40,7 @@ func run(fn string) output {
 
 	nBooks := tmp[0]
 	nLibraries := tmp[1]
-	// totDays := tmp[2]
+	totDays := tmp[2]
 
 	if !s.Scan() {
 		dieIf(errors.New("failed on second line"))
@@ -86,11 +86,15 @@ func run(fn string) output {
 		sort.Sort(bks)
 		l.Books = bks
 
-		// score della library = somma degli score dei libri
-		var score int
+		var totalBooksValue int
 		for _, b := range l.Books {
-			score += b.Score
+			totalBooksValue += b.Score
 		}
+		l.TotalBooksValue = totalBooksValue
+
+		// score della library
+		var score int = (totDays - l.RedistrationTime) * l.BooksPerDay * l.TotalBooksValue
+
 		l.Score = score
 
 		libraries = append(libraries, l)
@@ -170,6 +174,7 @@ type Library struct {
 	RedistrationTime int
 	BooksPerDay      int
 	Score            int
+	TotalBooksValue  int
 }
 
 func (l Libraries) Len() int           { return len(l) }
