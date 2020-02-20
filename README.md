@@ -21,4 +21,6 @@ reverse sort on books values for each libraries
 
 valore libreria == totale valore libri
 
+## v3
 
+potenziale su somma totale dei libri
