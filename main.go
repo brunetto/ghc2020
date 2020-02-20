@@ -11,7 +11,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/montanaflynn/stats"
 	"github.com/pkg/errors"
 )
 
@@ -94,15 +93,7 @@ func run(fn string) output {
 		l.TotalBooksValue = totalBooksValue
 
 		// score della library
-		data := make([]float64, 0, l.BooksCount)
-		for _, b := range l.Books {
-			data = append(data, float64(b.Score))
-		}
-		median, err := stats.Median(data)
-		dieIf(err)
-
-		var score int = (totDays - l.RedistrationTime) * l.BooksPerDay * int(median)
-		fmt.Println(score)
+		var score int = (totDays - l.RedistrationTime) * l.BooksPerDay * l.BooksCount
 
 		l.Score = score
 
