@@ -13,3 +13,7 @@ total, points: 90824112, max: 97845226, difference: 7021114, perc. missing: 7.17
 
 2020/02/20 19:47:38 done in  707.653502ms
 
+## v1
+
+reverse sort on books values for each libraries
+

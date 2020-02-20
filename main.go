@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -47,7 +48,7 @@ func run(fn string) output {
 	tmp = lineToIntSlice(s.Text())
 
 	// read books
-	books := make([]Book, 0, nBooks)
+	books := make(Books, 0, nBooks)
 	for id, score := range tmp {
 		books = append(books, Book{
 			ID: id, Score: score,
@@ -76,16 +77,27 @@ func run(fn string) output {
 		if !s.Scan() {
 			dieIf(errors.New("failed on first line"))
 		}
+
 		l.BookIDs = lineToIntSlice(s.Text())
+		bks := make(Books, 0, l.BooksCount)
+		for _, bid := range l.BookIDs {
+			bks = append(bks, books[bid])
+		}
+		sort.Sort(bks)
+		l.Books = bks
 		libraries = append(libraries, l)
 	}
 
 	res := []Result{}
 	for _, l := range libraries {
+		bksid := make([]int, 0, l.BooksCount)
+		for _, b := range l.Books {
+			bksid = append(bksid, b.ID)
+		}
 		res = append(res, Result{
 			LibraryID:  l.ID,
 			BooksCount: l.BooksCount,
-			BookIDs:    l.BookIDs,
+			BookIDs:    bksid,
 		})
 	}
 
@@ -126,16 +138,24 @@ func run(fn string) output {
 
 // =============================================================
 
+type Books []Book
 type Book struct {
 	ID    int
 	Score int
 	Done  bool
 }
 
+func (a Books) Len() int      { return len(a) }
+func (a Books) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+
+// books reverse sort
+func (a Books) Less(i, j int) bool { return a[i].Score > a[j].Score }
+
 type Library struct {
 	ID               int
 	BooksCount       int
 	BookIDs          []int
+	Books            Books
 	RedistrationTime int
 	BooksPerDay      int
 }
