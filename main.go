@@ -61,7 +61,6 @@ func run(fn string) output {
 	}
 
 	// read libraries
-	var totRegistrationTime int
 	libraries := make(Libraries, 0, nLibraries)
 	for i := 0; i < nLibraries; i++ {
 		if !s.Scan() {
@@ -75,8 +74,6 @@ func run(fn string) output {
 			RegistrationTime: tmp[1],
 			BooksPerDay:      tmp[2],
 		}
-
-		totRegistrationTime += l.RegistrationTime
 
 		if !s.Scan() {
 			dieIf(errors.New("failed on second line"))
@@ -111,11 +108,9 @@ func run(fn string) output {
 		libraries = append(libraries, l)
 	}
 
-	workDays := totDays - totRegistrationTime
-
 	// calcolo i potenziali sui giorni di lavoro
 	for i, l := range libraries {
-		l.Score = (workDays - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
+		l.Score = (totDays - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
 		libraries[i] = l
 	}
 
