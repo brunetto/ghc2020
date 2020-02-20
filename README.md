@@ -36,3 +36,7 @@ potenziale sul numero totale di libri
 ## v6 
 
 rimuovi duplicati in ordine di file
+
+## v7 
+
+rimuovo i duplicati in reverse order di potenziale

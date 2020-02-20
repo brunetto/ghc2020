@@ -81,14 +81,8 @@ func run(fn string) output {
 		bookIDs := lineToIntSlice(s.Text())
 		bks := make(Books, 0, l.BooksCount)
 		for _, bid := range bookIDs {
-			book := books[bid]
-			if book.Taken {
-				continue
-			}
-			book.Taken = true
-			books[bid] = book
 			l.BookIDs = append(l.BookIDs, bid)
-			bks = append(bks, book)
+			bks = append(bks, books[bid])
 		}
 		sort.Sort(bks)
 		l.Books = bks
@@ -110,6 +104,26 @@ func run(fn string) output {
 	}
 
 	sort.Sort(libraries)
+
+	// rimuovo i duplicati dopo aver calcolato il potenziale
+	for i, l := range libraries {
+		var bks Books
+		var bksIds []int
+		for _, b := range l.Books {
+			if books[b.ID].Taken {
+				continue
+			}
+			b.Taken = true
+			bksIds = append(bksIds, b.ID)
+			bks = append(bks, b)
+			books[b.ID] = b
+		}
+		l.BookIDs = bksIds
+		l.Books = bks
+		l.BooksCount = len(l.BookIDs)
+
+		libraries[i] = l
+	}
 
 	res := []Result{}
 	for _, l := range libraries {
