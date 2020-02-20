@@ -23,4 +23,8 @@ valore libreria == totale valore libri
 
 ## v3
 
-potenziale su somma totale dei libri
+potenziale sulla media del valore dei libri
+
+## v4 
+
+potenziale sull amediana del valore dei libri
