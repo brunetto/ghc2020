@@ -61,6 +61,7 @@ func run(fn string) output {
 	}
 
 	// read libraries
+	var totRegistrationTime int
 	libraries := make(Libraries, 0, nLibraries)
 	for i := 0; i < nLibraries; i++ {
 		if !s.Scan() {
@@ -71,19 +72,26 @@ func run(fn string) output {
 		l := Library{
 			ID:               i,
 			BooksCount:       tmp[0],
-			RedistrationTime: tmp[1],
+			RegistrationTime: tmp[1],
 			BooksPerDay:      tmp[2],
 		}
+
+		totRegistrationTime += l.RegistrationTime
+
 		if !s.Scan() {
-			dieIf(errors.New("failed on first line"))
+			dieIf(errors.New("failed on second line"))
 		}
 
+		// id dei libri contenuti nella biblioteca
 		bookIDs := lineToIntSlice(s.Text())
+
+		// raccolgo i libri per la libreria
 		bks := make(Books, 0, l.BooksCount)
 		for _, bid := range bookIDs {
-			l.BookIDs = append(l.BookIDs, bid)
 			bks = append(bks, books[bid])
 		}
+
+		// ordino i libri per valore e li aggiungo
 		sort.Sort(bks)
 		l.Books = bks
 
@@ -95,32 +103,38 @@ func run(fn string) output {
 		}
 		l.TotalBooksValue = totalBooksValue
 
-		// score della library
-		var score int = (totDays - l.RedistrationTime) * l.BooksPerDay * l.TotalBooksValue
+		// // score della library
+		// var score int = (totDays - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
 
-		l.Score = score
+		// l.Score = score
 
 		libraries = append(libraries, l)
 	}
 
+	workDays := totDays - totRegistrationTime
+
+	// calcolo i potenziali sui giorni di lavoro
+	for i, l := range libraries {
+		l.Score = (workDays - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
+		libraries[i] = l
+	}
+
+	// ordino le librerie per potenziale
 	sort.Sort(libraries)
 
 	// rimuovo i duplicati dopo aver calcolato il potenziale
 	for i, l := range libraries {
 		var bks Books
-		var bksIds []int
 		for _, b := range l.Books {
 			if books[b.ID].Taken {
 				continue
 			}
 			b.Taken = true
-			bksIds = append(bksIds, b.ID)
 			bks = append(bks, b)
 			books[b.ID] = b
 		}
-		l.BookIDs = bksIds
 		l.Books = bks
-		l.BooksCount = len(l.BookIDs)
+		l.BooksCount = len(l.Books)
 
 		libraries[i] = l
 	}
@@ -195,9 +209,8 @@ type Libraries []Library
 type Library struct {
 	ID               int
 	BooksCount       int
-	BookIDs          []int
 	Books            Books
-	RedistrationTime int
+	RegistrationTime int
 	BooksPerDay      int
 	Score            int
 	TotalBooksValue  int
