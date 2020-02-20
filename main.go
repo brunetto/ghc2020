@@ -16,11 +16,11 @@ import (
 
 var files = []string{
 	"a_example.txt",
-	// "b_read_on.txt",
-	// "c_incunabula.txt",
-	// "d_tough_choices.txt",
-	// "e_so_many_books.txt",
-	// "f_libraries_of_the_world.txt",
+	"b_read_on.txt",
+	"c_incunabula.txt",
+	"d_tough_choices.txt",
+	"e_so_many_books.txt",
+	"f_libraries_of_the_world.txt",
 }
 
 func run(fn string) output {
@@ -78,13 +78,22 @@ func run(fn string) output {
 			dieIf(errors.New("failed on first line"))
 		}
 
-		l.BookIDs = lineToIntSlice(s.Text())
+		bookIDs := lineToIntSlice(s.Text())
 		bks := make(Books, 0, l.BooksCount)
-		for _, bid := range l.BookIDs {
-			bks = append(bks, books[bid])
+		for _, bid := range bookIDs {
+			book := books[bid]
+			if book.Taken {
+				continue
+			}
+			book.Taken = true
+			books[bid] = book
+			l.BookIDs = append(l.BookIDs, bid)
+			bks = append(bks, book)
 		}
 		sort.Sort(bks)
 		l.Books = bks
+
+		l.BooksCount = len(l.Books)
 
 		var totalBooksValue int
 		for _, b := range l.Books {
@@ -93,7 +102,7 @@ func run(fn string) output {
 		l.TotalBooksValue = totalBooksValue
 
 		// score della library
-		var score int = (totDays - l.RedistrationTime) * l.BooksPerDay * l.BooksCount
+		var score int = (totDays - l.RedistrationTime) * l.BooksPerDay * l.TotalBooksValue
 
 		l.Score = score
 
@@ -104,6 +113,9 @@ func run(fn string) output {
 
 	res := []Result{}
 	for _, l := range libraries {
+		if l.BooksCount == 0 {
+			continue
+		}
 		bksid := make([]int, 0, l.BooksCount)
 		for _, b := range l.Books {
 			bksid = append(bksid, b.ID)
@@ -156,7 +168,7 @@ type Books []Book
 type Book struct {
 	ID    int
 	Score int
-	Done  bool
+	Taken bool
 }
 
 func (a Books) Len() int      { return len(a) }

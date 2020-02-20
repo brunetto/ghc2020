@@ -32,3 +32,7 @@ potenziale sull amediana del valore dei libri
 ## v5
 
 potenziale sul numero totale di libri
+
+## v6 
+
+rimuovi duplicati in ordine di file
