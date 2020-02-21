@@ -5,6 +5,58 @@
 ## v13.1
 more automated random
 
+E – so many books
+1,231,052 points
+done
+5:52 PM
+D – tough choices
+4,404,725 points
+done
+5:52 PM
+A – example
+21 points
+done
+5:52 PM
+C – incunabula
+1,048,029 points
+done
+5:52 PM
+B – read on
+4,779,100 points
+done
+5:52 PM
+F – libraries of the world
+2,021,048 points
+
+file: a_example.txt, points: 21, max: 21, difference: 0, perc. missing: 0.000000%, iteration: 0/12000
+file: b_read_on.txt, points: 4779100, max: 10000000, difference: 5220900, perc. missing: 52.209000%, iteration: 887/12000
+file: c_incunabula.txt, points: 1048029, max: 30076415, difference: 29028386, perc. missing: 96.515446%, iteration: 5916/12000
+file: d_tough_choices.txt, points: 4404725, max: 5109000, difference: 704275, perc. missing: 13.784987%, iteration: 3633/12000
+file: e_so_many_books.txt, points: 1231052, max: 12548648, difference: 11317596, perc. missing: 90.189764%, iteration: 5309/12000
+file: f_libraries_of_the_world.txt, points: 2021048, max: 40111142, difference: 38090094, perc. missing: 94.961380%, iteration: 1362/12000
+total, points: 13483975, max: 97845226, difference: 84361251, perc. missing: 86.219077%
+
+2020/02/21 17:50:16 done in  22m55.415693326s
+
+file: a_example.txt, points: 21, max: 21, difference: 0, perc. missing: 0.000000%, iteration: 0/5000 
+file: b_read_on.txt, points: 4714700, max: 10000000, difference: 5285300, perc. missing: 52.853000%, iteration: 1736/5000 
+file: c_incunabula.txt, points: 1026886, max: 30076415, difference: 29049529, perc. missing: 96.585743%, iteration: 1347/5000 
+file: d_tough_choices.txt, points: 4402840, max: 5109000, difference: 706160, perc. missing: 13.821883%, iteration: 300/5000 
+file: e_so_many_books.txt, points: 1199569, max: 12548648, difference: 11349079, perc. missing: 90.440651%, iteration: 864/5000 
+file: f_libraries_of_the_world.txt, points: 2009656, max: 40111142, difference: 38101486, perc. missing: 94.989781%, iteration: 820/5000 
+total, points: 13353672, max: 97845226, difference: 84491554, perc. missing: 86.352250%
+
+2020/02/21 17:26:10 done in  9m31.84384699s
+
+file: a_example.txt, points: 21, max: 21, difference: 0, perc. missing: 0.000000%, iteration: 0/500 
+file: b_read_on.txt, points: 4802300, max: 10000000, difference: 5197700, perc. missing: 51.977000%, iteration: 60/500 
+file: c_incunabula.txt, points: 992284, max: 30076415, difference: 29084131, perc. missing: 96.700790%, iteration: 270/500 
+file: d_tough_choices.txt, points: 4401085, max: 5109000, difference: 707915, perc. missing: 13.856234%, iteration: 267/500 
+file: e_so_many_books.txt, points: 1100728, max: 12548648, difference: 11447920, perc. missing: 91.228314%, iteration: 497/500 
+file: f_libraries_of_the_world.txt, points: 1865536, max: 40111142, difference: 38245606, perc. missing: 95.349083%, iteration: 119/500 
+total, points: 13161954, max: 97845226, difference: 84683272, perc. missing: 86.548190%
+
+2020/02/21 17:15:51 done in  56.253902967s
 
 
 ## v13.1

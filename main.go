@@ -24,7 +24,7 @@ var files = []string{
 	"f_libraries_of_the_world.txt",
 }
 
-const nSimulations = 5000
+const nSimulations = 12000
 
 func run(fn string) output {
 	var best struct {
