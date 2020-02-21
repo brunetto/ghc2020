@@ -60,7 +60,7 @@ func run(fn string) output {
 		theoreticalMaxScore += b.Score
 	}
 
-	// read libraries
+	// load libraries
 	libraries := make(Libraries, 0, nLibraries)
 	for i := 0; i < nLibraries; i++ {
 		if !s.Scan() {
@@ -70,10 +70,11 @@ func run(fn string) output {
 
 		l := Library{
 			ID:               i,
-			BooksCount:       tmp[0],
 			RegistrationTime: tmp[1],
 			BooksPerDay:      tmp[2],
 		}
+
+		booksCount := tmp[0]
 
 		if !s.Scan() {
 			dieIf(errors.New("failed on second line"))
@@ -83,16 +84,14 @@ func run(fn string) output {
 		bookIDs := lineToIntSlice(s.Text())
 
 		// raccolgo i libri per la libreria
-		bks := make(Books, 0, l.BooksCount)
+		bks := make(Books, 0, booksCount)
 		for _, bid := range bookIDs {
 			bks = append(bks, books[bid])
 		}
 
-		// ordino i libri per valore e li aggiungo
+		// sort library books desc on score
 		sort.Sort(bks)
 		l.Books = bks
-
-		l.BooksCount = len(l.Books)
 
 		var totalBooksValue int
 		for _, b := range l.Books {
@@ -100,40 +99,21 @@ func run(fn string) output {
 		}
 		l.TotalBooksValue = totalBooksValue
 
-		// // score della library
-		// var score int = (totDays - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
-
-		// l.Score = score
-
 		libraries = append(libraries, l)
 	}
 
-	// calcolo i potenziali sui giorni di lavoro
+	// compute library score as
+	// available days of work * work rate * total books value
 	for i, l := range libraries {
 		l.Score = (totDays - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
 		libraries[i] = l
 	}
 
-	// ordino le librerie per potenziale
+	// sort libraries desc on score
 	sort.Sort(libraries)
 
-	libraries2 := make(Libraries, 1, len(libraries))
-	libraries2[0] = libraries[0]
+	// remove duplicates from higher library score down to last library
 	for i, l := range libraries {
-		if i == 0 {
-			continue
-		}
-		l.Start = libraries2[i-1].Start + l.RegistrationTime
-		workingDays := totDays - l.Start
-		l.Score = (totDays - l.Start) * l.BooksPerDay * workingDays //* l.TotalBooksValue
-		libraries2 = append(libraries2, l)
-	}
-
-	// ordino le librerie per il nuovo potenziale
-	sort.Sort(libraries2)
-
-	// rimuovo i duplicati dopo aver calcolato il potenziale
-	for i, l := range libraries2 {
 		var bks Books
 		for j, b := range l.Books {
 			if j+l.Start > totDays {
@@ -147,23 +127,23 @@ func run(fn string) output {
 			books[b.ID] = b
 		}
 		l.Books = bks
-		l.BooksCount = len(l.Books)
 
-		libraries2[i] = l
+		libraries[i] = l
 	}
 
 	res := []Result{}
-	for _, l := range libraries2 {
-		if l.BooksCount == 0 {
+	for _, l := range libraries {
+		if len(l.Books) == 0 {
+			// skip empty libraries
 			continue
 		}
-		bksid := make([]int, 0, l.BooksCount)
+		bksid := make([]int, 0, len(l.Books))
 		for _, b := range l.Books {
 			bksid = append(bksid, b.ID)
 		}
 		res = append(res, Result{
 			LibraryID:  l.ID,
-			BooksCount: l.BooksCount,
+			BooksCount: len(l.Books),
 			BookIDs:    bksid,
 		})
 	}
@@ -221,7 +201,6 @@ func (a Books) Less(i, j int) bool { return a[i].Score > a[j].Score }
 type Libraries []Library
 type Library struct {
 	ID               int
-	BooksCount       int
 	Books            Books
 	RegistrationTime int
 	BooksPerDay      int

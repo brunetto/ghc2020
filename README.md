@@ -45,8 +45,21 @@ rimuovo i duplicati in reverse order di potenziale
 
 calcolo 2 volte il potenziale, la seconda considero che ogni libreria parte dopo quella che la precede
 
+# Extended run
 ## v12
 
 ritorno ad un solo potenziale e riparto da una soluzione semplice
 
 situazione prima dell'extended run: ![screen](./before_extended_run.png)
+
+|time|dset|points|
+|--|--|
+|10:15 AM | C – incunabula 1,248,641 points|
+|10:15 AM | A – example 21 points|
+|10:15 AM | F – libraries of the world 2,656,507 points|
+|10:15 AM | E – so many books 1,367,491 points|
+|10:15 AM | D – tough choices 4,840,290 points|
+|10:15 AM | B – read on 5,822,900 points|
+
+
+
