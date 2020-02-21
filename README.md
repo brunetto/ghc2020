@@ -67,7 +67,7 @@ ritorno ad un solo potenziale e riparto da una soluzione semplice
 Libraries random order
 
 |                            | 10:47 AM        | 10:49 AM         | 10:50 AM        | 10:52 AM|
-|-|-|-|-|
+|-|-|-|-|-|
 |A – example                 | 21              | 21               | 21              | 21|
 |B – read on                 | 4,304,100       | 4,049,900        | 4,323,800       | 4,261,300|
 |C – incunabula              | 886,856         | 860,164          | 818,122         | 882,561  |
