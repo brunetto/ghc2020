@@ -187,7 +187,7 @@ func run(fn string) output {
 
 }
 
-// =============================================================
+// data types
 
 type Books []Book
 type Book struct {
@@ -223,6 +223,7 @@ type Result struct {
 	BookIDs    []int
 }
 
+// helpers and main
 func main() {
 	t0 := time.Now()
 
