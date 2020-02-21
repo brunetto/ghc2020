@@ -24,139 +24,161 @@ var files = []string{
 	"f_libraries_of_the_world.txt",
 }
 
+const nSimulations = 5000
+
 func run(fn string) output {
-	// read data
-	in, err := os.Open(fn)
-	dieIf(err)
-	defer in.Close()
-
-	s := bufio.NewScanner(in)
-	bf := []byte{}
-	s.Buffer(bf, 5e6)
-
-	if !s.Scan() {
-		dieIf(errors.New("failed on first line"))
+	var best struct {
+		result    []Result
+		iteration int
+		score     int
+		maxScore  int
 	}
-	tmp := lineToIntSlice(s.Text())
+	for simulationIdx := 0; simulationIdx < nSimulations; simulationIdx++ {
 
-	nBooks := tmp[0]
-	nLibraries := tmp[1]
-	totDays := tmp[2]
+		// read data
+		in, err := os.Open(fn)
+		dieIf(err)
+		// defer in.Close()
 
-	if !s.Scan() {
-		dieIf(errors.New("failed on second line"))
-	}
-	tmp = lineToIntSlice(s.Text())
+		s := bufio.NewScanner(in)
+		bf := []byte{}
+		s.Buffer(bf, 5e6)
 
-	// read books
-	books := make(Books, 0, nBooks)
-	for id, score := range tmp {
-		books = append(books, Book{
-			ID: id, Score: score,
-		})
-	}
-
-	var theoreticalMaxScore int
-	for _, b := range books {
-		theoreticalMaxScore += b.Score
-	}
-
-	// load libraries
-	libraries := make(Libraries, 0, nLibraries)
-	for i := 0; i < nLibraries; i++ {
 		if !s.Scan() {
 			dieIf(errors.New("failed on first line"))
 		}
-		tmp = lineToIntSlice(s.Text())
+		tmp := lineToIntSlice(s.Text())
 
-		l := Library{
-			ID:               i,
-			RegistrationTime: tmp[1],
-			BooksPerDay:      tmp[2],
-		}
-
-		booksCount := tmp[0]
+		nBooks := tmp[0]
+		nLibraries := tmp[1]
+		totDays := tmp[2]
 
 		if !s.Scan() {
 			dieIf(errors.New("failed on second line"))
 		}
+		tmp = lineToIntSlice(s.Text())
 
-		// id dei libri contenuti nella biblioteca
-		bookIDs := lineToIntSlice(s.Text())
-
-		// raccolgo i libri per la libreria
-		bks := make(Books, 0, booksCount)
-		for _, bid := range bookIDs {
-			bks = append(bks, books[bid])
+		// read books
+		books := make(Books, 0, nBooks)
+		for id, score := range tmp {
+			books = append(books, Book{
+				ID: id, Score: score,
+			})
 		}
 
-		// sort library books desc on score
-		sort.Sort(bks)
-		l.Books = bks
-
-		var totalBooksValue int
-		for _, b := range l.Books {
-			totalBooksValue += b.Score
+		var theoreticalMaxScore int
+		for _, b := range books {
+			theoreticalMaxScore += b.Score
 		}
-		l.TotalBooksValue = totalBooksValue
 
-		libraries = append(libraries, l)
-	}
-
-	// compute library score as random
-	rand.Seed(time.Now().UnixNano())
-	randomScoring := rand.Perm(len(libraries))
-	for i, l := range libraries {
-		l.Score = randomScoring[i] //(totDays - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
-		libraries[i] = l
-	}
-
-	// sort libraries desc on score
-	sort.Sort(libraries)
-
-	// remove duplicates from higher library score down to last library
-	for i, l := range libraries {
-		var bks Books
-		for j, b := range l.Books {
-			if j+l.Start > totDays {
-				break
+		// load libraries
+		libraries := make(Libraries, 0, nLibraries)
+		for i := 0; i < nLibraries; i++ {
+			if !s.Scan() {
+				dieIf(errors.New("failed on first line"))
 			}
-			if books[b.ID].Taken {
+			tmp = lineToIntSlice(s.Text())
+
+			l := Library{
+				ID:               i,
+				RegistrationTime: tmp[1],
+				BooksPerDay:      tmp[2],
+			}
+
+			booksCount := tmp[0]
+
+			if !s.Scan() {
+				dieIf(errors.New("failed on second line"))
+			}
+
+			// id dei libri contenuti nella biblioteca
+			bookIDs := lineToIntSlice(s.Text())
+
+			// raccolgo i libri per la libreria
+			bks := make(Books, 0, booksCount)
+			for _, bid := range bookIDs {
+				bks = append(bks, books[bid])
+			}
+
+			// sort library books desc on score
+			sort.Sort(bks)
+			l.Books = bks
+
+			var totalBooksValue int
+			for _, b := range l.Books {
+				totalBooksValue += b.Score
+			}
+			l.TotalBooksValue = totalBooksValue
+
+			libraries = append(libraries, l)
+		}
+		in.Close()
+
+		// compute library score as random
+		rand.Seed(time.Now().UnixNano())
+		randomScoring := rand.Perm(len(libraries))
+		for i, l := range libraries {
+			l.Score = randomScoring[i]
+			// l.Score = (totDays - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
+			libraries[i] = l
+		}
+
+		// sort libraries desc on score
+		sort.Sort(libraries)
+
+		// remove duplicates from higher library score down to last library
+		for i, l := range libraries {
+			var bks Books
+			for j, b := range l.Books {
+				if j+l.Start > totDays {
+					break
+				}
+				if books[b.ID].Taken {
+					continue
+				}
+				b.Taken = true
+				bks = append(bks, b)
+				books[b.ID] = b
+			}
+			l.Books = bks
+
+			libraries[i] = l
+		}
+
+		var (
+			score, start int
+			res          []Result
+		)
+		for _, l := range libraries {
+			if len(l.Books) == 0 {
+				// skip empty libraries
 				continue
 			}
-			b.Taken = true
-			bks = append(bks, b)
-			books[b.ID] = b
-		}
-		l.Books = bks
 
-		libraries[i] = l
-	}
+			start += l.RegistrationTime                      // start after the previous one has finished and I registered
+			workingDays := totDays - start                   // working days between start and stop of the simulations
+			scannedBooksCount := workingDays * l.BooksPerDay // scan books at the current library rate during the working days
 
-	var score, start int
-	res := []Result{}
-	for _, l := range libraries {
-		if len(l.Books) == 0 {
-			// skip empty libraries
-			continue
-		}
-
-		start += l.RegistrationTime                      // start after the previous one has finished and I registered
-		workingDays := totDays - start                   // working days between start and stop of the simulations
-		scannedBooksCount := workingDays * l.BooksPerDay // scan books at the current library rate during the working days
-
-		bksid := make([]int, 0, len(l.Books))
-		for i, b := range l.Books {
-			if i < scannedBooksCount {
-				score += b.Score // add score for the books we can actually scan before the end
+			bksid := make([]int, 0, len(l.Books))
+			for i, b := range l.Books {
+				if i < scannedBooksCount {
+					score += b.Score // add score for the books we can actually scan before the end
+				}
+				bksid = append(bksid, b.ID) // add all the books, just in case
 			}
-			bksid = append(bksid, b.ID) // add all the books, just in case
+			res = append(res, Result{
+				LibraryID:  l.ID,
+				BooksCount: len(l.Books),
+				BookIDs:    bksid,
+			})
 		}
-		res = append(res, Result{
-			LibraryID:  l.ID,
-			BooksCount: len(l.Books),
-			BookIDs:    bksid,
-		})
+
+		if score > best.score {
+			best.result = res
+			best.iteration = simulationIdx
+			best.score = score
+			best.maxScore = theoreticalMaxScore
+		}
 	}
 
 	// write output
@@ -164,10 +186,10 @@ func run(fn string) output {
 	dieIf(err)
 	defer out.Close()
 
-	_, err = out.WriteString(fmt.Sprintf("%v", len(res)) + "\n")
+	_, err = out.WriteString(fmt.Sprintf("%v", len(best.result)) + "\n")
 	dieIf(err)
 
-	for _, r := range res {
+	for _, r := range best.result {
 		_, err = out.WriteString(fmt.Sprintf("%v %v", r.LibraryID, r.BooksCount) + "\n")
 		dieIf(err)
 
@@ -180,9 +202,10 @@ func run(fn string) output {
 	}
 
 	return output{
-		p:   score,
-		max: theoreticalMaxScore,
-		fn:  fn,
+		iteration: best.iteration,
+		p:         best.score,
+		max:       best.maxScore,
+		fn:        fn,
 	}
 
 }
@@ -239,10 +262,11 @@ func main() {
 		for res := range out {
 			sumP += res.p
 			sumT += res.max
-			fmt.Printf("file: %v, points: %v, max: %v, difference: %v, perc. missing: %f%% \n", res.fn, res.p, res.max, res.max-res.p, 100*float64(res.max-res.p)/float64(res.max))
+			fmt.Printf("file: %v, points: %v, max: %v, difference: %v, perc. missing: %f%%, iteration: %v/%v \n",
+				res.fn, res.p, res.max, res.max-res.p, 100*float64(res.max-res.p)/float64(res.max), res.iteration, nSimulations)
 		}
 
-		fmt.Printf("total, points: %v, max: %v, difference: %v, perc. missing: %f%% \n",
+		fmt.Printf("total, points: %v, max: %v, difference: %v, perc. missing: %f%%\n",
 			sumP, sumT, sumT-sumP, 100*float64(sumT-sumP)/float64(sumT))
 	}()
 
@@ -267,9 +291,10 @@ func main() {
 }
 
 type output struct {
-	p   int
-	max int
-	fn  string
+	p         int
+	max       int
+	iteration int
+	fn        string
 }
 
 func lineToIntSlice(line string) []int {

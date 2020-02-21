@@ -3,8 +3,13 @@
 # Extended run
 
 ## v13.1
-
 more automated random
+
+
+
+## v13.1
+
+more automated random: check score calculation
 
 | 4:41 |   google        | computed |
 |--|--|--|
