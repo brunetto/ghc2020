@@ -52,8 +52,9 @@ ritorno ad un solo potenziale e riparto da una soluzione semplice
 
 situazione prima dell'extended run: ![screen](./before_extended_run.png)
 
-|time|dset|points|
-|--|--|
+
+| time | dset | points |
+|----------|----------|----------|
 |10:15 AM | C – incunabula | 1,248,641 points|
 |10:15 AM | A – example | 21 points|
 |10:15 AM | F – libraries of the world | 2,656,507 points|
