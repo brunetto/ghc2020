@@ -54,12 +54,12 @@ situazione prima dell'extended run: ![screen](./before_extended_run.png)
 
 |time|dset|points|
 |--|--|
-|10:15 AM | C – incunabula 1,248,641 points|
-|10:15 AM | A – example 21 points|
-|10:15 AM | F – libraries of the world 2,656,507 points|
-|10:15 AM | E – so many books 1,367,491 points|
-|10:15 AM | D – tough choices 4,840,290 points|
-|10:15 AM | B – read on 5,822,900 points|
+|10:15 AM | C – incunabula | 1,248,641 points|
+|10:15 AM | A – example | 21 points|
+|10:15 AM | F – libraries of the world | 2,656,507 points|
+|10:15 AM | E – so many books | 1,367,491 points|
+|10:15 AM | D – tough choices | 4,840,290 points|
+|10:15 AM | B – read on | 5,822,900 points|
 
 
 
