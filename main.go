@@ -103,11 +103,9 @@ func run(fn string) output {
 		libraries = append(libraries, l)
 	}
 
+	// compute library score as random
 	rand.Seed(time.Now().UnixNano())
 	randomScoring := rand.Perm(len(libraries))
-
-	// compute library score as
-	// available days of work * work rate * total books value
 	for i, l := range libraries {
 		l.Score = randomScoring[i] //(totDays - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
 		libraries[i] = l
@@ -135,15 +133,24 @@ func run(fn string) output {
 		libraries[i] = l
 	}
 
+	var score, start int
 	res := []Result{}
 	for _, l := range libraries {
 		if len(l.Books) == 0 {
 			// skip empty libraries
 			continue
 		}
+
+		start += l.RegistrationTime                      // start after the previous one has finished and I registered
+		workingDays := totDays - start                   // working days between start and stop of the simulations
+		scannedBooksCount := workingDays * l.BooksPerDay // scan books at the current library rate during the working days
+
 		bksid := make([]int, 0, len(l.Books))
-		for _, b := range l.Books {
-			bksid = append(bksid, b.ID)
+		for i, b := range l.Books {
+			if i < scannedBooksCount {
+				score += b.Score // add score for the books we can actually scan before the end
+			}
+			bksid = append(bksid, b.ID) // add all the books, just in case
 		}
 		res = append(res, Result{
 			LibraryID:  l.ID,
@@ -160,27 +167,20 @@ func run(fn string) output {
 	_, err = out.WriteString(fmt.Sprintf("%v", len(res)) + "\n")
 	dieIf(err)
 
-	score := map[int]int{}
 	for _, r := range res {
 		_, err = out.WriteString(fmt.Sprintf("%v %v", r.LibraryID, r.BooksCount) + "\n")
 		dieIf(err)
 
 		bks := make([]string, 0, len(r.BookIDs))
 		for _, bid := range r.BookIDs {
-			score[bid] = books[bid].Score
 			bks = append(bks, strconv.Itoa(bid))
 		}
 		_, err = out.WriteString(strings.Join(bks, " ") + "\n")
 		dieIf(err)
 	}
 
-	var totalScore int
-	for _, s := range score {
-		totalScore += s
-	}
-
 	return output{
-		p:   totalScore,
+		p:   score,
 		max: theoreticalMaxScore,
 		fn:  fn,
 	}
@@ -188,7 +188,6 @@ func run(fn string) output {
 }
 
 // data types
-
 type Books []Book
 type Book struct {
 	ID    int
@@ -240,10 +239,10 @@ func main() {
 		for res := range out {
 			sumP += res.p
 			sumT += res.max
-			fmt.Printf("file: %v, points: %v, max: %v, difference: %v\n", res.fn, res.p, res.max, res.max-res.p)
+			fmt.Printf("file: %v, points: %v, max: %v, difference: %v, perc. missing: %f%% \n", res.fn, res.p, res.max, res.max-res.p, 100*float64(res.max-res.p)/float64(res.max))
 		}
 
-		fmt.Printf("total, points: %v, max: %v, difference: %v, perc. missing: %f%%: \n",
+		fmt.Printf("total, points: %v, max: %v, difference: %v, perc. missing: %f%% \n",
 			sumP, sumT, sumT-sumP, 100*float64(sumT-sumP)/float64(sumT))
 	}()
 

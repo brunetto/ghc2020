@@ -6,6 +6,17 @@
 
 more automated random
 
+| 4:41 |   google        | computed |
+|--|--|--|
+|A – example                 |  21           |   21     |
+|B – read on                 |  4,063,100    |   4,063,100     |
+|C – incunabula              |  913,331      |   913,331     |
+|D – tough choices           |  4,386,525    |    4,386,525    |
+|E – so many books           |   836,916     |  836,916      |
+|F – libraries of the world  |   711,910     |   711,910       |
+
+
+
 ## v15
 
 ripartiamo da v12 che era meglio... any idea?
@@ -17,11 +28,11 @@ score base on value density = valore totale libri / (start + tempo di caricament
 ||4:13 PM|
 |-|-|
 |A – example                 | 21              |
-|B – read on |4,126,100 points|
-|C – incunabula |870,640 points|
-|D – tough choices |4,150,120 points|
-|E – so many books |727,895 points|
-|F – libraries of the world |916,429 points|
+|B – read on                 |4,126,100 points|
+|C – incunabula              |870,640 points|
+|D – tough choices           |4,150,120 points|
+|E – so many books           |727,895 points|
+|F – libraries of the world  |916,429 points|
 
 ## v13
 
