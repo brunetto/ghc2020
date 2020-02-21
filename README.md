@@ -103,3 +103,23 @@ A – example
 
 
 
+10:50 AM
+E – so many books
+896,323 points
+10:50 AM
+C – incunabula
+818,122 points
+10:50 AM
+D – tough choices
+4,378,985 points
+10:50 AM
+B – read on
+4,323,800 points
+10:50 AM
+A – example
+21 points
+10:50 AM
+F – libraries of the world
+1,334,509 points
+
+
