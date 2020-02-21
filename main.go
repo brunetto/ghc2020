@@ -24,7 +24,7 @@ var files = []string{
 	"f_libraries_of_the_world.txt",
 }
 
-const nSimulations = 12000
+const nSimulations = 500
 
 func run(fn string) output {
 	var best struct {
@@ -101,7 +101,7 @@ func run(fn string) output {
 			}
 
 			// sort library books desc on score
-			sort.Sort(bks)
+			// sort.Sort(bks)
 			l.Books = bks
 
 			var totalBooksValue int
@@ -129,10 +129,10 @@ func run(fn string) output {
 		// remove duplicates from higher library score down to last library
 		for i, l := range libraries {
 			var bks Books
-			for j, b := range l.Books {
-				if j+l.Start > totDays {
-					break
-				}
+			for _, b := range l.Books {
+				// if j+l.Start > totDays {
+				// 	break
+				// }
 				if books[b.ID].Taken {
 					continue
 				}
@@ -161,8 +161,8 @@ func run(fn string) output {
 
 			bksid := make([]int, 0, len(l.Books))
 			for i, b := range l.Books {
-				if i < scannedBooksCount {
-					score += b.Score // add score for the books we can actually scan before the end
+				if i < scannedBooksCount && !books[b.ID].Taken {
+					score += b.Score // add score for the books we can actually scan before the end and are not already scanned
 				}
 				bksid = append(bksid, b.ID) // add all the books, just in case
 			}

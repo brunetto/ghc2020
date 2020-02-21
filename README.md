@@ -2,8 +2,16 @@
 
 # Extended run
 
+## v13.3
+
+tolto ogni sort e selezione dei libri, librerie solo random 
+
+## v13.2???
+
 ## v13.1
 more automated random
+
+total -> 16,859,010  (diverso da mio totale)
 
 E – so many books
 1,231,052 points
