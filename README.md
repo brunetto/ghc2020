@@ -66,60 +66,11 @@ ritorno ad un solo potenziale e riparto da una soluzione semplice
 
 Libraries random order
 
-
-10:47 AM A – example
-21 points
-10:47 AM
-C – incunabula
-886,856 points
-10:47 AM
-E – so many books
-633,920 points
-10:47 AM
-F – libraries of the world
-423,153 points
-10:47 AM
-B – read on
-4,304,100 points
-
-10:49 AM
-E – so many books
-908,746 points
-10:49 AM
-F – libraries of the world
-1,214,645 points
-10:49 AM
-D – tough choices
-4,393,675 points
-10:49 AM
-B – read on
-4,049,900 points
-10:49 AM
-C – incunabula
-860,164 points
-10:49 AM
-A – example
-21 points
-
-
-
-10:50 AM
-E – so many books
-896,323 points
-10:50 AM
-C – incunabula
-818,122 points
-10:50 AM
-D – tough choices
-4,378,985 points
-10:50 AM
-B – read on
-4,323,800 points
-10:50 AM
-A – example
-21 points
-10:50 AM
-F – libraries of the world
-1,334,509 points
-
-
+|                            | 10:47 AM        | 10:49 AM         | 10:50 AM        | 10:52 AM|
+|-|-|-|-|
+|A – example                 | 21              | 21               | 21              | 21|
+|B – read on                 | 4,304,100       | 4,049,900        | 4,323,800       | 4,261,300|
+|C – incunabula              | 886,856         | 860,164          | 818,122         | 882,561  |
+|D – tough choices           | 4,378,725       | 4,393,675        | 4,378,985       | 4,383,275|
+|E – so many books           | 633,920         | 908,746          | 896,323         | 858,111|
+|F – libraries of the world  | 423,153         | 1,214,645        | 1,334,509       | 421,842 |
