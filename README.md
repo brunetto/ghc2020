@@ -45,21 +45,61 @@ rimuovo i duplicati in reverse order di potenziale
 
 calcolo 2 volte il potenziale, la seconda considero che ogni libreria parte dopo quella che la precede
 
+situazione prima dell'extended run: ![screen](./before_extended_run.png)
+
 # Extended run
 ## v12
 
 ritorno ad un solo potenziale e riparto da una soluzione semplice
 
-situazione prima dell'extended run: ![screen](./before_extended_run.png)
-
 |time|dset|points|
-|--|--|
-|10:15 AM | C – incunabula 1,248,641 points|
-|10:15 AM | A – example 21 points|
-|10:15 AM | F – libraries of the world 2,656,507 points|
-|10:15 AM | E – so many books 1,367,491 points|
-|10:15 AM | D – tough choices 4,840,290 points|
-|10:15 AM | B – read on 5,822,900 points|
+|--|--|--|
+|10:15 AM | C – incunabula |1,248,641 points|
+|10:15 AM | A – example |21 points|
+|10:15 AM | F – libraries of the world |2,656,507 points|
+|10:15 AM | E – so many books |1,367,491 points|
+|10:15 AM | D – tough choices |4,840,290 points|
+|10:15 AM | B – read on |5,822,900 points|
+|Total | | 15,935,850 |
+
+## v13
+
+Libraries random order
+
+
+10:47 AM A – example
+21 points
+10:47 AM
+C – incunabula
+886,856 points
+10:47 AM
+E – so many books
+633,920 points
+10:47 AM
+F – libraries of the world
+423,153 points
+10:47 AM
+B – read on
+4,304,100 points
+
+10:49 AM
+E – so many books
+908,746 points
+10:49 AM
+F – libraries of the world
+1,214,645 points
+10:49 AM
+D – tough choices
+4,393,675 points
+10:49 AM
+B – read on
+4,049,900 points
+10:49 AM
+C – incunabula
+860,164 points
+10:49 AM
+A – example
+21 points
 
 
 
