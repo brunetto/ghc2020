@@ -135,10 +135,7 @@ func run(fn string) output {
 	// rimuovo i duplicati dopo aver calcolato il potenziale
 	for i, l := range libraries2 {
 		var bks Books
-		for j, b := range l.Books {
-			if j+l.Start > totDays {
-				break
-			}
+		for _, b := range l.Books {
 			if books[b.ID].Taken {
 				continue
 			}
