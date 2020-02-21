@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"log"
-	"math/rand"
 	"os"
 	"sort"
 	"strconv"
@@ -103,14 +102,10 @@ func run(fn string) output {
 		libraries = append(libraries, l)
 	}
 
-	rand.Seed(time.Now().UnixNano())
-	randomScoring := rand.Perm(len(libraries))
-
 	// compute library score as
-	// available days of work * work rate * total books value
-	for i, l := range libraries {
-		l.Score = randomScoring[i] //(totDays - l.RegistrationTime) * l.BooksPerDay * l.TotalBooksValue
-		libraries[i] = l
+	// valore totale libri / (start + tempo di caricamento)
+	for _, l := range libraries {
+		l.Score = l.TotalBooksValue / (l.RegistrationTime + l.BooksPerDay*len(l.Books))
 	}
 
 	// sort libraries desc on score

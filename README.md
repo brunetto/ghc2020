@@ -1,6 +1,20 @@
 # ghc2020
 
 # Extended run
+
+## v14 
+
+score base on value density = valore totale libri / (start + tempo di caricamento)
+
+||4:13 PM|
+|-|-|
+|A – example                 | 21              |
+|B – read on |4,126,100 points|
+|C – incunabula |870,640 points|
+|D – tough choices |4,150,120 points|
+|E – so many books |727,895 points|
+|F – libraries of the world |916,429 points|
+
 ## v13
 
 Libraries random order
