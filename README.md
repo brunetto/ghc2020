@@ -1,6 +1,28 @@
 # ghc2020
 
 # Extended run
+
+## v13.1
+
+more automated random
+
+## v15
+
+ripartiamo da v12 che era meglio... any idea?
+
+## v14 
+
+score base on value density = valore totale libri / (start + tempo di caricamento)
+
+||4:13 PM|
+|-|-|
+|A – example                 | 21              |
+|B – read on |4,126,100 points|
+|C – incunabula |870,640 points|
+|D – tough choices |4,150,120 points|
+|E – so many books |727,895 points|
+|F – libraries of the world |916,429 points|
+
 ## v13
 
 Libraries random order
@@ -30,7 +52,7 @@ ritorno ad un solo potenziale e riparto da una soluzione semplice
 
 # Classification run
 
-## v11
+## v11
 
 calcolo 2 volte il potenziale, la seconda considero che ogni libreria parte dopo quella che la precede
 
@@ -80,4 +102,3 @@ file: d_tough_choices.txt, points: 5109000, max: 5109000, difference: 0
 total, points: 90824112, max: 97845226, difference: 7021114, perc. missing: 7.175735%: 
 
 2020/02/20 19:47:38 done in  707.653502ms
-
