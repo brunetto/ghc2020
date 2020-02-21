@@ -40,3 +40,13 @@ rimuovi duplicati in ordine di file
 ## v7 
 
 rimuovo i duplicati in reverse order di potenziale
+
+## v11
+
+calcolo 2 volte il potenziale, la seconda considero che ogni libreria parte dopo quella che la precede
+
+## v12
+
+ritorno ad un solo potenziale e riparto da una soluzione semplice
+
+situazione prima dell'extended run: ![screen](./before_extended_run.png)
